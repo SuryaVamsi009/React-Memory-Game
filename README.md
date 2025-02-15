@@ -3,6 +3,9 @@
 
 This React Memory Game is a web-based project showcasing interactive UI development using React and modern hooks (useState, useEffect, useRef). The application dynamically renders emoji-based cards, allowing users to test their memory by matching pairs. It includes state management, event handling, animations, and accessibility features to ensure an engaging user experience.
 
+[Play Here!](https://surya1930.github.io/React-Memory-Game/)
+
+
 Key Features:
 ✅ React Hooks for efficient state updates
 ✅ Dynamic Rendering of emoji-based cards
