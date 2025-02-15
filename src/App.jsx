@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
-import Form from './components/Form.jsx'
 import MemoryCard from './components/MemoryCard.jsx'
 import AssistiveTechInfo from './components/AssistiveTechInfo.jsx'
 import GameOver from './components/GameOver.jsx'
+import GameSetup from './components/GameSetup.jsx'
 
 export default function App() {
     const [isGameOn, setIsGameOn] = useState(false)
+    const [numberOfCards, setNumberOfCards] = useState(5)
     const [emojisData, setEmojisData] = useState([])
     const [selectedCards, setSelectedCards] = useState([])
     const [matchedCards, setMatchedCards] = useState([])
@@ -45,6 +46,9 @@ export default function App() {
             console.log(err)
         }
     }
+    function handleCardCountChange(e){
+        setNumberOfCards(Number(e.target.value))
+    }
 
 //get data array
     async function getDataSlice(data){
@@ -57,9 +61,9 @@ export default function App() {
     function getRandomIndices(data){
         const randomIndicesArray = []
 
-        for(let i=0; i < 10; i++){
+        for(let i=0; i < numberOfCards; i++){
             const index = Math.floor(Math.random() * data.length)
-            if (!(index in randomIndicesArray)){
+            if (!randomIndicesArray.includes(index)){
                 randomIndicesArray.push(index)
             }else{
                 i--
@@ -107,7 +111,13 @@ export default function App() {
             {areAllCardsMatched && 
                 <GameOver handleClick={resetGame}/>
             }
-            {!isGameOn && <Form handleSubmit={startGame} />}
+            {!isGameOn && ( 
+                <GameSetup 
+                    selectedValue={numberOfCards}
+                    handleChange={handleCardCountChange}
+                    handleSubmit={startGame}
+                /> 
+                )}
             {isGameOn && !areAllCardsMatched && 
                 <AssistiveTechInfo 
                     emojisData={emojisData} 
