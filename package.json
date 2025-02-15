@@ -1,6 +1,6 @@
 {
   "name": "memory-game-1",
-  "homepage": "https://github.com/Surya1930/React-Memory-Game/",
+  "homepage": "https://Surya1930.github.io/React-Memory-Game/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,6 +9,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "predeploy" : "npm run build",
     "deploy" : "gh-pages -d dist"
   },
   "dependencies": {
