@@ -3,19 +3,22 @@ import MemoryCard from './components/MemoryCard.jsx'
 import AssistiveTechInfo from './components/AssistiveTechInfo.jsx'
 import GameOver from './components/GameOver.jsx'
 import GameSetup from './components/GameSetup.jsx'
+import emojiData from './emojibase.json';
+import './GameSetup.css'
 
 export default function App() {
     const [isGameOn, setIsGameOn] = useState(false)
-    const [numberOfCards, setNumberOfCards] = useState(5)
+    const [numberOfCards, setNumberOfCards] = useState("5")
     const [emojisData, setEmojisData] = useState([])
     const [selectedCards, setSelectedCards] = useState([])
     const [matchedCards, setMatchedCards] = useState([])
     const [areAllCardsMatched, setAreAllCardsMatched] = useState(false)
+    const [selectedCategory, setSelectedCategory] = useState("")
 
     
     useEffect(() => {
         if (selectedCards.length === 2 && selectedCards[0].name == selectedCards[1].name ){
-            setMatchedCards(prevMatchedCards => [...prevMatchedCards, ...selectedCards])
+            setMatchedCards((prevMatchedCards) => [...prevMatchedCards, ...selectedCards])
         }
     }, [selectedCards])
 
@@ -26,17 +29,20 @@ export default function App() {
         }
     },[matchedCards, emojisData])
 
-    async function startGame(e) {
-        e.preventDefault()
+    const handleCategoryChange = (e) => {
+        setSelectedCategory(e.target.value); 
+    }
+
+    function handleCardCountChange(e) {
+        setNumberOfCards(e.target.value)
+    }
+
+
+    async function startGame() {
         try {
-            const response = await fetch("https://emojihub.yurace.pro/api/all/category/animals-and-nature")
+             const filteredEmojiData = emojiData.filter((emoji) => emoji.category === selectedCategory);
 
-            if(!response.ok){
-                throw new Error("Error Fetching Data")
-            }
-
-            const data = await response.json()
-            const dataSlice = await getDataSlice(data)
+            const dataSlice = await getDataSlice(filteredEmojiData)
             const emojisArray =  await getEmojisArray(dataSlice)
 
             setEmojisData(emojisArray)
@@ -46,14 +52,11 @@ export default function App() {
             console.log(err)
         }
     }
-    function handleCardCountChange(e){
-        setNumberOfCards(Number(e.target.value))
-    }
 
 //get data array
     async function getDataSlice(data){
         const randomIndices = getRandomIndices(data)
-        const dataSlice = randomIndices.map(x => data[x])
+        const dataSlice = randomIndices.map((x) => data[x])
         return dataSlice
     }
 
@@ -61,7 +64,7 @@ export default function App() {
     function getRandomIndices(data){
         const randomIndicesArray = []
 
-        for(let i=0; i < numberOfCards; i++){
+        for(let i=0; i < Number(numberOfCards); i++){
             const index = Math.floor(Math.random() * data.length)
             if (!randomIndicesArray.includes(index)){
                 randomIndicesArray.push(index)
@@ -90,7 +93,7 @@ export default function App() {
 
     function turnCard(name, index) {
         if ( selectedCards.length < 2){
-            setSelectedCards(prevSelectedCard => [...prevSelectedCard, {name , index}])
+            setSelectedCards((prevSelectedCard) => [...prevSelectedCard, {name , index}])
         }else if ( selectedCards.length == 2) {
             setSelectedCards([{name, index}])
         }
@@ -103,11 +106,13 @@ export default function App() {
         setSelectedCards([])
         setMatchedCards([])
         setAreAllCardsMatched(false)
+        setSelectedCategory("")
+        setNumberOfCards("5")
     }
     
     return (
         <main>
-            <h1>Memory</h1>
+            <h1>Memory Quest 🎴</h1>
             {areAllCardsMatched && 
                 <GameOver handleClick={resetGame}/>
             }
@@ -116,8 +121,10 @@ export default function App() {
                     selectedValue={numberOfCards}
                     handleChange={handleCardCountChange}
                     handleSubmit={startGame}
+                    selectedCategory={selectedCategory}
+                    handleCategoryChange={handleCategoryChange}
                 /> 
-                )}
+            )}
             {isGameOn && !areAllCardsMatched && 
                 <AssistiveTechInfo 
                     emojisData={emojisData} 
