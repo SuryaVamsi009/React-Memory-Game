@@ -65,7 +65,7 @@ export default function GameSetup({
                     value={selectedValue} 
                     onChange={handleChange}
                 >
-                    <option value="" disabled>
+                    <option value="">
                         Select Number of Cards
                     </option>
                     <option value="5">10</option>

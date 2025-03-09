@@ -8,7 +8,7 @@ import './GameSetup.css'
 
 export default function App() {
     const [isGameOn, setIsGameOn] = useState(false)
-    const [numberOfCards, setNumberOfCards] = useState("5")
+    const [numberOfCards, setNumberOfCards] = useState("")
     const [emojisData, setEmojisData] = useState([])
     const [selectedCards, setSelectedCards] = useState([])
     const [matchedCards, setMatchedCards] = useState([])
